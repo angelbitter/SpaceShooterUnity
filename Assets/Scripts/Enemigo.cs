@@ -10,11 +10,13 @@ public class Enemigo : MonoBehaviour
     [SerializeField] private Disparo disparoPrefab;
     [SerializeField] private GameObject spawnPoint;
     [SerializeField] private TMPro.TextMeshProUGUI textPuntos;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip audioClip;
     private ObjectPool<Disparo> disparoPool;
     void Start()
     {
         textPuntos = GameObject.Find("Puntos").GetComponent<TMPro.TextMeshProUGUI>();
-        
+        audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
         StartCoroutine(DisparoEnemigos());
     }
 
@@ -62,7 +64,8 @@ public class Enemigo : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D otro)
     {
         if(otro.gameObject.CompareTag("DisparoPlayer"))
-        {
+        {   
+            audioSource.PlayOneShot(audioClip);
             string texto = textPuntos.text;
             string[] parts = texto.Split(new string[] { ":" }, StringSplitOptions.None);
             int puntos = int.Parse(parts[1]);

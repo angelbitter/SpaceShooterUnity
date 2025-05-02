@@ -120,9 +120,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80de56aa7dfa57147bbd89c6720f83d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidad: 5
+  velocidad: 10
   disparoPrefab: {fileID: 2057587511931222760, guid: fa0296d6850e9554a829880456c24723, type: 3}
   textPuntos: {fileID: 0}
+  audioSource: {fileID: 0}
+  audioClip: {fileID: 8300000, guid: caa598a4405deab428d13b6c13269692, type: 3}
 --- !u!1 &8240558933087780341
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,7 +200,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 6244566791580061287, guid: 1f8abbad72d06ce48bfcb4213229edad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

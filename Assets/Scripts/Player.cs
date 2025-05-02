@@ -1,6 +1,10 @@
 using System;
+using System.Collections;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -9,13 +13,21 @@ public class Player : MonoBehaviour
     [SerializeField] private Disparo disparoPrefab;
     private ObjectPool<Disparo> disparoPool;
     [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private TMPro.TextMeshProUGUI textVidas;
+    [SerializeField] private Image vida1, vida2, vida3;
+    [SerializeField] private SpriteRenderer playerSprite;
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip[] audioClip;
+
 
     private float vidas = 6;
+    private bool dead = false;
     private float temporizadorDisparo;
+    private bool isVulnerable = true; // Tiempo de invulnerabilidad
+    private float vulnerableTime = 1f; // Tiempo de invulnerabilidad
     void Start()
     {
-        textVidas.text = "Vidas: " + vidas;
+
     }
     private void Awake()
     {
@@ -45,10 +57,12 @@ public class Player : MonoBehaviour
         // Movimiento constante hacia la izquierda del jugador
         transform.Translate(new Vector2(1, 0).normalized * -1 * Time.deltaTime);
 
-        Move();
-        DelimitarMovimiento();
-        Disparar();
-
+        if (!dead)
+        {
+            Move();
+            DelimitarMovimiento();
+            Disparar();
+        }
     }
 
     void Move()
@@ -67,33 +81,104 @@ public class Player : MonoBehaviour
 
     void Disparar()
     {
-        
+
         temporizadorDisparo += 1 * Time.deltaTime;
         if (Input.GetKey(KeyCode.Space) && temporizadorDisparo > ratioDisparo)
         {
+            audioSource.PlayOneShot(audioClip[0]);
             for (int i = 0; i < spawnPoints.Length; i++)
             {
-            Disparo copy = disparoPool.Get();
-            copy.transform.position = spawnPoints[i].position;
+                Disparo copy = disparoPool.Get();
+                copy.transform.position = spawnPoints[i].position;
             }
             temporizadorDisparo = 0;
         }
     }
     private void OnTriggerEnter2D(Collider2D otro)
     {
-        if(otro.gameObject.CompareTag("Enemigo") || otro.gameObject.CompareTag("DisparoEnemigo"))
+        if ((otro.gameObject.CompareTag("Enemigo") || otro.gameObject.CompareTag("DisparoEnemigo"))
+        && isVulnerable)
         {
             vidas--;
-            textVidas.text = "Vidas: " + vidas;
-            if (vidas <= 0)
+            audioSource.PlayOneShot(audioClip[1]);
+            StartCoroutine(invulnerable());
+            switch (vidas)
             {
-                Muerte();
+
+                case 1:
+                    vida1.fillAmount = 0.5f;
+                    vida2.fillAmount = 0f;
+                    vida3.fillAmount = 0f;
+                    break;
+                case 2:
+                    vida1.fillAmount = 1f;
+                    vida2.fillAmount = 0f;
+                    vida3.fillAmount = 0f;
+                    break;
+                case 3:
+                    vida1.fillAmount = 1f;
+                    vida2.fillAmount = 0.5f;
+                    vida3.fillAmount = 0f;
+                    break;
+                case 4:
+                    vida1.fillAmount = 1f;
+                    vida2.fillAmount = 1f;
+                    vida3.fillAmount = 0f;
+                    break;
+                case 5:
+                    vida1.fillAmount = 1f;
+                    vida2.fillAmount = 1f;
+                    vida3.fillAmount = 0.5f;
+                    break;
+                case 6:
+                    vida1.fillAmount = 1f;
+                    vida2.fillAmount = 1f;
+                    vida3.fillAmount = 1f;
+                    break;
+                case 0:
+                    vida1.fillAmount = 0f;
+                    vida2.fillAmount = 0f;
+                    vida3.fillAmount = 0f;
+                    Muerte();
+                    break;
             }
         }
     }
+    IEnumerator invulnerable()
+    {
+        isVulnerable = false;
+        StartCoroutine(InvulnerableVisual());
+        yield return new WaitForSeconds(vulnerableTime);
+        isVulnerable = true;
+    }
+    IEnumerator InvulnerableVisual()
+    {
+        playerSprite.color = Color.red;
+        while (!isVulnerable)
+        {
+            playerSprite.enabled = false;
+            yield return new WaitForSeconds(0.1f);
+            playerSprite.enabled = true;
+            yield return new WaitForSeconds(0.1f);
+        }
+        playerSprite.color = Color.white;
+    }
     void Muerte()
     {
-        Destroy(gameObject);
-        // Aquí puedes agregar la lógica para reiniciar el juego o mostrar una pantalla de Game Over
+        audioSource.PlayOneShot(audioClip[2]);
+        dead = true;
+        playerSprite.gameObject.SetActive(false);
+        gameOverPanel.gameObject.SetActive(true);
+        StartCoroutine(WaitForKeyToRestart());
+    }
+    private IEnumerator WaitForKeyToRestart()
+    {
+
+        yield return new WaitForSeconds(2f);
+        while (!Input.anyKeyDown)
+        {
+            yield return null;
+        }
+        SceneManager.LoadScene(0);
     }
 }

@@ -7,9 +7,13 @@ public class EnemigoFormacion : MonoBehaviour
     [SerializeField] private float velocidad;
     [SerializeField] private GameObject disparoPrefab;
     [SerializeField] private TMPro.TextMeshProUGUI textPuntos;
+    
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip audioClip;
     void Start()
     {
         textPuntos = GameObject.Find("Puntos").GetComponent<TMPro.TextMeshProUGUI>();
+        audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -26,6 +30,7 @@ public class EnemigoFormacion : MonoBehaviour
     {
         if(otro.gameObject.CompareTag("DisparoPlayer"))
         {
+            audioSource.PlayOneShot(audioClip);
             string texto = textPuntos.text;
             string[] parts = texto.Split(new string[] { ":" }, StringSplitOptions.None);
             int puntos = int.Parse(parts[1]);
