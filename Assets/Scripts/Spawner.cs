@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private GameObject enemigoPrefab;
     [SerializeField] private TMPro.TextMeshProUGUI textOleadas;
     [SerializeField] private GameObject gameOverPanel;
+    public UnityEvent SpawnFormationEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,6 +30,8 @@ public class Spawner : MonoBehaviour
         {
             for (int j = 0; j < 3; j++)
             {
+                
+                SpawnFormationEvent.Invoke();
                 StartCoroutine(SpawnOleada(i, j));
                 for (int k = 0; k < 5; k++)
                 {
@@ -34,7 +39,7 @@ public class Spawner : MonoBehaviour
                     {
                         yield break;
                     }
-                    Vector3 puntoAleatorio = new Vector3(transform.position.x, Random.Range(-4.5f, 4.5f), 0);
+                    Vector3 puntoAleatorio = new Vector3(transform.position.x, UnityEngine.Random.Range(-4.5f, 4.5f), 0);
                     Instantiate(enemigoPrefab, puntoAleatorio, Quaternion.identity);
                     yield return new WaitForSeconds(1f);
                 }

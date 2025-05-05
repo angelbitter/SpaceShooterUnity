@@ -128,6 +128,9 @@ MonoBehaviour:
   textPuntos: {fileID: 0}
   audioSource: {fileID: 0}
   audioClip: {fileID: 8300000, guid: caa598a4405deab428d13b6c13269692, type: 3}
+  lifePickUpPrefab: {fileID: 4282860873333305112, guid: 82dfc1fcce723354b8b04f7c965d2549, type: 3}
+  increaseAttackPrefab: {fileID: 330748719424720258, guid: e3bab54f6474eb04ca08a3a20436ae5a, type: 3}
+  pickUpSpawnRate: 25
 --- !u!1 &1520300005677926386
 GameObject:
   m_ObjectHideFlags: 0

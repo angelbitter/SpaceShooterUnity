@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 
 
     private float vidas = 6;
+    private int puntosDisparo = 2;
     private bool dead = false;
     private float temporizadorDisparo;
     private bool isVulnerable = true; // Tiempo de invulnerabilidad
@@ -81,17 +82,65 @@ public class Player : MonoBehaviour
 
     void Disparar()
     {
-
         temporizadorDisparo += 1 * Time.deltaTime;
         if (Input.GetKey(KeyCode.Space) && temporizadorDisparo > ratioDisparo)
         {
-            audioSource.PlayOneShot(audioClip[0]);
-            for (int i = 0; i < spawnPoints.Length; i++)
+            audioSource.PlayOneShot(audioClip[0]); // Sonido de disparo
+            for (int i = 0; i < puntosDisparo; i++)
             {
                 Disparo copy = disparoPool.Get();
                 copy.transform.position = spawnPoints[i].position;
+                copy.transform.rotation = spawnPoints[i].rotation;
             }
             temporizadorDisparo = 0;
+        }
+    }
+    public void ActualizarVidas(int vida)
+    {
+        vidas += vida;
+        if (vidas > 6)
+        {
+            vidas = 6;
+        }
+        switch (vidas)
+        {
+            case 0:
+                vida1.fillAmount = 0f;
+                vida2.fillAmount = 0f;
+                vida3.fillAmount = 0f;
+                Muerte();
+                break;
+            case 1:
+                vida1.fillAmount = 0.5f;
+                vida2.fillAmount = 0f;
+                vida3.fillAmount = 0f;
+                break;
+            case 2:
+                vida1.fillAmount = 1f;
+                vida2.fillAmount = 0f;
+                vida3.fillAmount = 0f;
+                break;
+            case 3:
+                vida1.fillAmount = 1f;
+                vida2.fillAmount = 0.5f;
+                vida3.fillAmount = 0f;
+                break;
+            case 4:
+                vida1.fillAmount = 1f;
+                vida2.fillAmount = 1f;
+                vida3.fillAmount = 0f;
+                break;
+            case 5:
+                vida1.fillAmount = 1f;
+                vida2.fillAmount = 1f;
+                vida3.fillAmount = 0.5f;
+                break;
+            case 6:
+                vida1.fillAmount = 1f;
+                vida2.fillAmount = 1f;
+                vida3.fillAmount = 1f;
+                break;
+
         }
     }
     private void OnTriggerEnter2D(Collider2D otro)
@@ -99,49 +148,9 @@ public class Player : MonoBehaviour
         if ((otro.gameObject.CompareTag("Enemigo") || otro.gameObject.CompareTag("DisparoEnemigo"))
         && isVulnerable)
         {
-            vidas--;
-            audioSource.PlayOneShot(audioClip[1]);
+            ActualizarVidas(-1);
+            audioSource.PlayOneShot(audioClip[1]); // Sonido de daño
             StartCoroutine(invulnerable());
-            switch (vidas)
-            {
-
-                case 1:
-                    vida1.fillAmount = 0.5f;
-                    vida2.fillAmount = 0f;
-                    vida3.fillAmount = 0f;
-                    break;
-                case 2:
-                    vida1.fillAmount = 1f;
-                    vida2.fillAmount = 0f;
-                    vida3.fillAmount = 0f;
-                    break;
-                case 3:
-                    vida1.fillAmount = 1f;
-                    vida2.fillAmount = 0.5f;
-                    vida3.fillAmount = 0f;
-                    break;
-                case 4:
-                    vida1.fillAmount = 1f;
-                    vida2.fillAmount = 1f;
-                    vida3.fillAmount = 0f;
-                    break;
-                case 5:
-                    vida1.fillAmount = 1f;
-                    vida2.fillAmount = 1f;
-                    vida3.fillAmount = 0.5f;
-                    break;
-                case 6:
-                    vida1.fillAmount = 1f;
-                    vida2.fillAmount = 1f;
-                    vida3.fillAmount = 1f;
-                    break;
-                case 0:
-                    vida1.fillAmount = 0f;
-                    vida2.fillAmount = 0f;
-                    vida3.fillAmount = 0f;
-                    Muerte();
-                    break;
-            }
         }
     }
     IEnumerator invulnerable()
@@ -153,7 +162,7 @@ public class Player : MonoBehaviour
     }
     IEnumerator InvulnerableVisual()
     {
-        playerSprite.color = Color.red;
+        // playerSprite.color = Color.red;
         while (!isVulnerable)
         {
             playerSprite.enabled = false;
@@ -161,7 +170,7 @@ public class Player : MonoBehaviour
             playerSprite.enabled = true;
             yield return new WaitForSeconds(0.1f);
         }
-        playerSprite.color = Color.white;
+        // playerSprite.color = Color.white;
     }
     void Muerte()
     {
@@ -173,12 +182,42 @@ public class Player : MonoBehaviour
     }
     private IEnumerator WaitForKeyToRestart()
     {
-
         yield return new WaitForSeconds(2f);
         while (!Input.anyKeyDown)
         {
             yield return null;
         }
         SceneManager.LoadScene(0);
+    }
+    public void RecuperarVida(int vida)
+    {
+        audioSource.PlayOneShot(audioClip[3]); // Sonido de recoger pickup
+        ActualizarVidas(vida);
+    }
+    public void PickedPowerUp(string type)
+    {
+        audioSource.PlayOneShot(audioClip[3]); // Sonido de recoger pickup
+        switch (type)
+        {
+            case "IncreaseAttackRate":
+                StartCoroutine(IncreaseAttackRate());
+                break;
+            case "SpreadShot":
+                StartCoroutine(SpreadShot());
+                break;
+            default:
+                break;
+        }
+    }
+    private IEnumerator IncreaseAttackRate()
+    {
+        ratioDisparo /= 2f;
+        yield return new WaitForSeconds(5f);
+        ratioDisparo *= 2f;
+    }
+    private IEnumerator SpreadShot()
+    {
+        puntosDisparo = 4;
+        yield return new WaitForSeconds(5f);
     }
 }
