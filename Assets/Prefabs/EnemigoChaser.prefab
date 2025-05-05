@@ -122,7 +122,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocidad: 3
-  ratioDisparo: 0
   disparoPrefab: {fileID: 4178988673023629086, guid: fa0296d6850e9554a829880456c24723, type: 3}
   spawnPoint: {fileID: 1520300005677926386}
   textPuntos: {fileID: 0}

@@ -101,7 +101,7 @@ public class EnemigoChaser : MonoBehaviour
             string texto = textPuntos.text;
             string[] parts = texto.Split(new string[] { ":" }, StringSplitOptions.None);
             int puntos = int.Parse(parts[1]);
-            textPuntos.text = "Puntos: " + (puntos + 200).ToString();
+            textPuntos.text = "Puntos: " + (puntos + 1000).ToString();
             int rate = UnityEngine.Random.Range(0, pickUpSpawnRate);
             switch (rate)
             {
