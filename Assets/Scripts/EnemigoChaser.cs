@@ -3,10 +3,9 @@ using System;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class Enemigo : MonoBehaviour
+public class EnemigoChaser : MonoBehaviour
 {
     [SerializeField] private float velocidad;
-    [SerializeField] private float ratioDisparo;
     [SerializeField] private Disparo disparoPrefab;
     [SerializeField] private GameObject spawnPoint;
     [SerializeField] private TMPro.TextMeshProUGUI textPuntos;
@@ -17,12 +16,16 @@ public class Enemigo : MonoBehaviour
     [SerializeField] private SpreadShotPU spreadShotPrefab;
 
     [SerializeField] private int pickUpSpawnRate;
+    private bool canMove = true;
+    private Vector3 targetPosition;
     private ObjectPool<Disparo> disparoPool;
+    private Player player;
     void Start()
     {
         textPuntos = GameObject.Find("Puntos").GetComponent<TMPro.TextMeshProUGUI>();
         audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
-        StartCoroutine(DisparoEnemigos());
+        player = GameObject.Find("Player").GetComponent<Player>();
+        StartCoroutine(MoveTowardsPlayer());
     }
 
     private void Awake()
@@ -49,20 +52,44 @@ public class Enemigo : MonoBehaviour
     }
     void Update()
     {
-        transform.Translate(new Vector3(-1, 0, 0) * velocidad * Time.deltaTime);
-        if (transform.position.x < -9f)
+        transform.Translate(new Vector3(-1, 0, 0) * 1 * Time.deltaTime);
+    }
+
+    private IEnumerator MoveTowardsPlayer()
+    {
+        StartCoroutine(MoveTimer());
+        while (true)
         {
-            Destroy(gameObject);
+        
+        if (player != null && canMove)
+        {
+            transform.Translate(targetPosition * velocidad * Time.deltaTime);
+            
+        }
+        yield return null;
+        }
+    }
+    private IEnumerator MoveTimer()
+    {
+        while (true)
+        {   
+            targetPosition = (player.transform.position - transform.position).normalized;
+            canMove = true;
+            yield return new WaitForSeconds(2f);
+            canMove = false;
+            yield return new WaitForSeconds(0.5f);
+            DisparoRadial();
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
-    IEnumerator DisparoEnemigos()
+    private void DisparoRadial()
     {
-        while (true)
+        for (int i = 0; i < 8; i++)
         {
             Disparo copy = disparoPool.Get();
             copy.transform.position = spawnPoint.transform.position;
-            yield return new WaitForSeconds(ratioDisparo);
+            copy.transform.rotation = Quaternion.Euler(0, 0, i * 45);
         }
     }
 

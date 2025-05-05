@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 8255634352791251975}
   - component: {fileID: 4975302397790531104}
   - component: {fileID: 6567885555849579562}
-  - component: {fileID: 5570251916978506107}
+  - component: {fileID: 8284539299503153153}
   m_Layer: 0
-  m_Name: Enemigo
+  m_Name: EnemigoChaser
   m_TagString: Enemigo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,7 +109,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5570251916978506107
+--- !u!114 &8284539299503153153
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,11 +118,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1512653596239491523}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ca854fbd5eadf240adca81d8e90fc58, type: 3}
+  m_Script: {fileID: 11500000, guid: 397f3ec5e763243478ec381b1fc4c3f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidad: 7
-  ratioDisparo: 0.6
+  velocidad: 3
+  ratioDisparo: 0
   disparoPrefab: {fileID: 4178988673023629086, guid: fa0296d6850e9554a829880456c24723, type: 3}
   spawnPoint: {fileID: 1520300005677926386}
   textPuntos: {fileID: 0}
@@ -131,7 +131,7 @@ MonoBehaviour:
   lifePickUpPrefab: {fileID: 4282860873333305112, guid: 82dfc1fcce723354b8b04f7c965d2549, type: 3}
   increaseAttackPrefab: {fileID: 330748719424720258, guid: e3bab54f6474eb04ca08a3a20436ae5a, type: 3}
   spreadShotPrefab: {fileID: 4840829656659824393, guid: 94f55dafac2c3104686b07e6d345af03, type: 3}
-  pickUpSpawnRate: 20
+  pickUpSpawnRate: 3
 --- !u!1 &1520300005677926386
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +157,7 @@ Transform:
   m_GameObject: {fileID: 1520300005677926386}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.428, y: 0.0014028959, z: 0}
+  m_LocalPosition: {x: -0.8, y: 0.0014028959, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -239,7 +239,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: -3134104915716573907, guid: 1f8abbad72d06ce48bfcb4213229edad, type: 3}
+  m_Sprite: {fileID: -2724302760477441569, guid: 1f8abbad72d06ce48bfcb4213229edad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

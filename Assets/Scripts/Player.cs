@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Image vida1, vida2, vida3;
     [SerializeField] private SpriteRenderer playerSprite;
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject winPanel;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] audioClip;
 
@@ -162,7 +163,6 @@ public class Player : MonoBehaviour
     }
     IEnumerator InvulnerableVisual()
     {
-        // playerSprite.color = Color.red;
         while (!isVulnerable)
         {
             playerSprite.enabled = false;
@@ -170,7 +170,6 @@ public class Player : MonoBehaviour
             playerSprite.enabled = true;
             yield return new WaitForSeconds(0.1f);
         }
-        // playerSprite.color = Color.white;
     }
     void Muerte()
     {
@@ -212,12 +211,19 @@ public class Player : MonoBehaviour
     private IEnumerator IncreaseAttackRate()
     {
         ratioDisparo /= 2f;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
         ratioDisparo *= 2f;
     }
     private IEnumerator SpreadShot()
     {
         puntosDisparo = 4;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
+        puntosDisparo = 2;
+    }
+    public void OnWin()
+    {
+        winPanel.SetActive(true);
+        audioSource.PlayOneShot(audioClip[4]); // Sonido de ganar
+        StartCoroutine(WaitForKeyToRestart());
     }
 }

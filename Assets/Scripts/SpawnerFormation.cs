@@ -26,7 +26,6 @@ public class SpawnerFormation : MonoBehaviour
     
     public void OnSpawnFormationEvent()
     {
-        Debug.Log("SpawnFormationEvent Invoked");
         StartCoroutine(SpawnFormation());
     }
     IEnumerator SpawnFormation()

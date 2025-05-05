@@ -10,10 +10,10 @@ public class EnemigoFormacion : MonoBehaviour
 
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip audioClip;
-
     [SerializeField] private int pickUpSpawnRate;
     [SerializeField] private LifePickUp lifePickUpPrefab;
     [SerializeField] private IncreaseAttackRatePU increaseAttackPrefab;
+    [SerializeField] private SpreadShotPU spreadShotPrefab;
     void Start()
     {
         textPuntos = GameObject.Find("Puntos").GetComponent<TMPro.TextMeshProUGUI>();
@@ -45,15 +45,18 @@ public class EnemigoFormacion : MonoBehaviour
             {
                 case 0:
                     Instantiate(lifePickUpPrefab, transform.position, Quaternion.identity);
-                    break; 
+                    break;
                 case 1:
                     Instantiate(increaseAttackPrefab, transform.position, Quaternion.identity);
                     break;
-            default:
-                break;
+                case 2:
+                    Instantiate(spreadShotPrefab, transform.position, Quaternion.identity);
+                    break;
+                default:
+                    break;
             }
-                Destroy(otro.gameObject);
-                Destroy(gameObject);
+            Destroy(otro.gameObject);
+            Destroy(gameObject);
         }
     }
 }
